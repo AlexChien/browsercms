@@ -117,6 +117,7 @@ Gem::Specification.new do |s|
     "app/views/cms/category_types/_form.html.erb",
     "app/views/cms/connectors/new.html.erb",
     "app/views/cms/content/show.html.erb",
+    "app/views/cms/content/no_page.html.erb",
     "app/views/cms/content_types/index.html.erb",
     "app/views/cms/dashboard/_page_drafts.html.erb",
     "app/views/cms/dashboard/_tasks.html.erb",
