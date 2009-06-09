@@ -6,14 +6,13 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["BrowserMedia"]
-  s.date = %q{2009-05-05}
+  s.date = %q{2009-06-02}
   s.email = %q{github@browsermedia.com}
   s.extra_rdoc_files = [
     "LICENSE.txt",
     "README.markdown"
   ]
   s.files = [
-    "browsercms.gemspec",
     "app/controllers/application_controller.rb",
     "app/controllers/cms/application_controller.rb",
     "app/controllers/cms/attachments_controller.rb",
@@ -116,6 +115,7 @@ Gem::Specification.new do |s|
     "app/views/cms/categories/_form.html.erb",
     "app/views/cms/category_types/_form.html.erb",
     "app/views/cms/connectors/new.html.erb",
+    "app/views/cms/content/no_page.html.erb",
     "app/views/cms/content/show.html.erb",
     "app/views/cms/content/no_page.html.erb",
     "app/views/cms/content_types/index.html.erb",
@@ -851,8 +851,9 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://www.browsercms.org}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
+  s.rubyforge_project = %q{browsercms}
   s.rubygems_version = %q{1.3.1}
-  s.summary = %q{A Content Management System for Rails}
+  s.summary = %q{BrowserCMS is a general purpose, open source Web Content Management System (CMS), written in Ruby on Rails.}
   s.test_files = [
     "test/custom_assertions.rb",
     "test/factories.rb",
@@ -862,6 +863,7 @@ Gem::Specification.new do |s|
     "test/functional/cms/content_controller_test.rb",
     "test/functional/cms/content_types_controller_test.rb",
     "test/functional/cms/dashboard_controller_test.rb",
+    "test/functional/cms/dynamic_views_controller_test.rb",
     "test/functional/cms/file_blocks_controller_test.rb",
     "test/functional/cms/groups_controller_test.rb",
     "test/functional/cms/home_controller_test.rb",
@@ -873,6 +875,7 @@ Gem::Specification.new do |s|
     "test/functional/cms/section_nodes_controller_test.rb",
     "test/functional/cms/sections_controller_test.rb",
     "test/functional/cms/sessions_controller_test.rb",
+    "test/functional/cms/toolbar_controller_test.rb",
     "test/functional/cms/users_controller_test.rb",
     "test/integration/login_test.rb",
     "test/test_helper.rb",
@@ -891,6 +894,7 @@ Gem::Specification.new do |s|
     "test/unit/helpers/page_helper_test.rb",
     "test/unit/helpers/path_helper_test.rb",
     "test/unit/lib/content_block_test.rb",
+    "test/unit/lib/generators_test.rb",
     "test/unit/models/attachment_test.rb",
     "test/unit/models/category_test.rb",
     "test/unit/models/category_type_test.rb",
