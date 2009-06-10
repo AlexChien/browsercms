@@ -1,8 +1,8 @@
 <% page_title "Administration / Group Browser" %>
 <% @toolbar_title = "List Groups" %>
 
-<% content_for :functions do %> 
-  <%= link_to(span_tag("Add Group"), new_cms_group_path, 
+<% content_for :functions do %>
+  <%= link_to(span_tag("Add Group"), new_cms_group_path,
     :id => "new_group_button", :class => "button") %>
 <% end %>
 
@@ -40,7 +40,7 @@
           </div>
         </td>
         <td>
-          <% g.permissions.uniq.each do |p| %>
+          <% g.permissions.find(:all).uniq.each do |p| %>
             - <%= p.full_name %> <br />
           <% end %>
           - <%= g.cms_access? ? "Edit" : "View" %>

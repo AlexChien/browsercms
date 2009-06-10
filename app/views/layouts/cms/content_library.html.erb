@@ -52,7 +52,7 @@
                 <%= yield :sidebar %>
                 <h3>Content Types</h3>
                 <ul>
-                  <% ContentTypeGroup.all(:order => "content_type_groups.id").each do |g| %>
+                  <% ContentTypeGroup.find(:all,:order => "content_type_groups.id").each do |g| %>
                     <li<%= ' class="open"' if (g == content_type.content_type_group) %>>
                       <% if g.content_types.blank? %>
                         <%= link_to h(g.name), "#" %>
@@ -82,7 +82,7 @@
                   <%= yield %>
                 </div>
               </div>
-            </div>              
+            </div>
             <br clear="all" />
             <div class="bottom_cap_content"></div>
             <%= render :partial => 'layouts/cms/footer' %>

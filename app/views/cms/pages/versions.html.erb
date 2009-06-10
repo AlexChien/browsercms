@@ -7,7 +7,7 @@
       }, function(){
         $(this).removeClass('hover')
       }).click(function(){
-        var match = this.id.match(/(.*)_(\d+)/) 
+        var match = this.id.match(/(.*)_(\d+)/)
         var type = match[1];
         var id = match[2];
         $('table.data tbody tr').removeClass('selected');
@@ -55,7 +55,7 @@
       </tr>
     </thead>
     <tbody>
-      <% @page.versions.all(:order => "version desc").each_with_index do |r, i| %>
+      <% @page.versions.find(:all,:order => "version desc").each_with_index do |r, i| %>
         <% current = @page.version == r.version %>
         <tr id="revision_<%= r.version %>" <%= 'class="current"' if current %>>
           <td class="first"></td>

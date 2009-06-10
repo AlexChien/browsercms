@@ -9,7 +9,7 @@ module Cms
         @controller.instance_variable_get("@template").instance_variable_get("@page_title")
       end
     end
-    
+
     def searchable_sections(selected = nil)
       root = Section.root.first
       options = [['All sections', 'all'], [root.name, root.id]]
@@ -23,10 +23,10 @@ module Cms
     end
 
     def page_versions(page)
-      text = select_tag(:version, 
-                        options_for_select(page.versions.all(:order => "version desc").map { |r| 
-                                             ["v#{r.version}: #{r.version_comment} by #{r.updated_by.login} at #{time_on_date(r.updated_at)}", r.version] 
-                                           }, page.version), 
+      text = select_tag(:version,
+                        options_for_select(page.versions.find(:all,:order => "version desc").map { |r|
+                                             ["v#{r.version}: #{r.version_comment} by #{r.updated_by.login} at #{time_on_date(r.updated_at)}", r.version]
+                                           }, page.version),
                         :onchange => 'this.form.submit(); return false')
       text << javascript_tag("$('version').selectedIndex = 0") if page.live?
       text
@@ -38,13 +38,13 @@ module Cms
         if connectable.class.versioned?
           connectable = connectable.as_of_version(connector.connectable_version)
         end
-        render :partial => 'cms/pages/edit_connector', 
+        render :partial => 'cms/pages/edit_connector',
           :locals => { :connector => connector, :connectable => connectable}
       else
         render_connectable(connectable)
       end
     end
-    
+
     def render_connectable(content_block)
       if content_block
         if content_block.class.renderable?
@@ -55,16 +55,16 @@ module Cms
         end
       else
         logger.warn "Connectable is null"
-      end    
+      end
     rescue Exception => e
       logger.error "Error occurred while rendering #{content_block.class}##{content_block.id}: #{e.message}\n#{e.backtrace.join("\n")}"
       "ERROR: #{e.message}"
     end
-    
+
     def action_icon_src(name)
       "cms/icons/actions/#{name}.png"
     end
-    
+
     def action_icon(name, options={})
       image_tag action_icon_src(name), {:alt => name.to_s.titleize}.merge(options)
     end
@@ -72,11 +72,11 @@ module Cms
     def status_icon(status, options={})
       image_tag "cms/icons/status/#{status.to_s.underscore}.gif", {:alt => status.to_s.titleize}.merge(options)
     end
-    
+
     def render_cms_toolbar(tab=:dashboard)
-      render :partial => 'layouts/cms_toolbar', :locals => {:tab => tab}    
+      render :partial => 'layouts/cms_toolbar', :locals => {:tab => tab}
     end
-    
+
     def link_to_usages(block)
       count = block.connected_pages.count
       if count > 0
@@ -87,7 +87,7 @@ module Cms
         count
       end
     end
-    
+
     def time_on_date(time)
       time && "#{time.strftime("%l:%M %p")} on #{time.strftime("%b %e, %Y")}"
     end
@@ -95,7 +95,7 @@ module Cms
     def format_date(time)
       time && "#{time.strftime("%b %e, %Y")}"
     end
-    
+
     def link_to_check_all(selector, name="Check All")
       link_to_function name, "$('#{selector}').attr('checked', true)"
     end
@@ -103,11 +103,11 @@ module Cms
     def link_to_uncheck_all(selector, name="Uncheck All")
       link_to_function name, "$('#{selector}').attr('checked', false)"
     end
-    
+
     def able_to?(*perms, &block)
       yield if current_user.able_to?(*perms)
     end
-    
+
     def span_tag(content)
       content_tag :span, content
     end
@@ -126,19 +126,30 @@ LBW
     def dk_button_wrapper(content)
       lt_button_wrapper(content).gsub("lt_button_","dk_button_")
     end
+
     def group_ids
-      (params[:group_ids] || @user.group_ids).collect { |g| g.to_i }
+      #(params[:group_ids] || @user.group_ids).collect { |g| g.to_i }
+      array_u = []
+      if params[:group_ids]
+        array_u = params[:group_ids].collect{ |g| g.to_i}
+      else
+        @ugm = UserGroupMembership.find(:all,:conditions=>["user_id = ?",@user.id])
+        @ugm.each do |li|
+        array_u << li.group_id
+        end
+      end
+      array_u
     end
 
     def group_filter
       select_tag("group_id", options_from_collection_for_select(Group.all.insert(0, Group.new(:id => nil, :name => "Show All Groups")), "id", "name", params[:group_id].to_i))
-    end	  	  
-    
+    end
+
     def categories_for(category_type_name, order="name")
       cat_type = CategoryType.named(category_type_name).first
       cat_type ? cat_type.category_list(order) : []
-    end	  
-    
+    end
+
     def render_pagination(collection, collection_name, options={})
       if collection.blank?
         content_tag(:div, "No Content", :class => "pagination")
@@ -152,7 +163,7 @@ LBW
           :last_page_path => send("cms_#{collection_name}_path", {:page => collection.total_pages}.merge(options))
         }
       end
-    end	  
+    end
 
     def url_with_mode(url, mode)
       uri = URI.parse(url)
@@ -164,7 +175,7 @@ LBW
         "#{uri.path}?mode=#{mode}"
       end
     end
-    
+
     def tb_iframe(path, options={})
       # The order of the parameters matters.  All parameters that should be sent to the server,
       # have to appear before TB_iframe.  All parameters that shouldn't be sent to the server and
@@ -173,7 +184,7 @@ LBW
         s << "&#{k}=#{CGI::escape(v.to_s)}"
       end
     end
-    
+
     def determine_order(current_order, order)
       if current_order == order
         if order =~ / desc$/i
@@ -183,8 +194,8 @@ LBW
         end
       else
         order
-      end 
+      end
     end
-    
+
   end
 end

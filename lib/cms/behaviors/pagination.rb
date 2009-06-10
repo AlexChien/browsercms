@@ -12,8 +12,8 @@ module Cms
         def initialize(page, page_num)
           super "#{page.inspect} given as value, which translates to '#{page_num}' as page number"
         end
-      end      
-      class Collection < Array
+      end
+      class Collection_cms < Array
         attr_reader :current_page, :per_page, :total_entries, :total_pages
 
         # Arguments to the constructor are the current page number, per-page limit
@@ -114,7 +114,7 @@ module Cms
           end
 
           result
-        end        
+        end
       end
       module ClassMethods
         # This is the main paginating finder.
@@ -128,7 +128,7 @@ module Cms
         #
         # All other options (+conditions+, +order+, ...) are forwarded to +find+
         # and +count+ calls.
-        def paginate(*args, &block)
+        def cms_paginate(*args, &block)
           options = args.pop
           page, per_page, total_entries = parse_pagination_options(options)
 
@@ -140,9 +140,9 @@ module Cms
             args.unshift(:all) if args.empty?
           end
 
-          Collection.create(page, per_page, total_entries) do |pager|
+          Collection_cms.create(page, per_page, total_entries) do |pager|
             count_options = options.except :page, :per_page, :total_entries, :finder
-            find_options = count_options.except(:count).update(:offset => pager.offset, :limit => pager.per_page) 
+            find_options = count_options.except(:count).update(:offset => pager.offset, :limit => pager.per_page)
 
             args << find_options
             # @options_from_last_find = nil
@@ -151,8 +151,8 @@ module Cms
             # magic counting for user convenience:
             pager.total_entries = count_for_pagination(count_options, args, finder) unless pager.total_entries
           end
-        end 
-        protected       
+        end
+        protected
           # Does the not-so-trivial job of finding out the total number of entries
           # in the database. It relies on the ActiveRecord +count+ method.
           def count_for_pagination(options, args, finder)
@@ -202,7 +202,7 @@ module Cms
             per_page = options[:per_page] || self.default_per_page
             total    = options[:total_entries]
             [page, per_page, total]
-          end        
+          end
       end
     end
   end

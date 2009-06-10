@@ -13,15 +13,15 @@ class User < ActiveRecord::Base
   #validates_uniqueness_of   :email,    :case_sensitive => false
   validates_format_of       :email,    :with => /[^@]{2,}@[^.]{2,}\..{2,}/, :message => "should be an email address, ex. xx@xx.com"
 
-  attr_accessible :login, :email, :name, :first_name, :last_name, :password, :password_confirmation, :expires_at
+  attr_accessible :login, :email, :name, :password, :password_confirmation, :expires_at
 
   has_many :user_group_memberships
   has_many :groups, :through => :user_group_memberships
   has_many :tasks, :foreign_key => "assigned_to_id"
-    
+
   named_scope :active, :conditions => {:expires_at => nil }
-  named_scope :able_to_edit_or_publish_content, 
-    :include => {:groups => :permissions}, 
+  named_scope :able_to_edit_or_publish_content,
+    :include => {:groups => :permissions},
     :conditions => ["permissions.name = ? OR permissions.name = ?", "edit_content", "publish_content"]
 
   def self.current
@@ -30,9 +30,17 @@ class User < ActiveRecord::Base
   def self.current=(user)
     Thread.current[:cms_user] = user
   end
-    
+
   def self.guest(options = {})
     GuestUser.new(options)
+  end
+
+  def first_name
+    return self.name
+  end
+
+  def last_name
+    return ""
   end
 
   def guest?
@@ -97,11 +105,11 @@ class User < ActiveRecord::Base
   #true if the user has any of the permissions
   def able_to?(*required_permissions)
     perms = required_permissions.map(&:to_sym)
-    permissions.any? do |p| 
-      perms.include?(p.name.to_sym) 
+    permissions.any? do |p|
+      perms.include?(p.name.to_sym)
     end
   end
-    
+
   #Expects object to be an object or a section
   #If it's a section, that will be used
   #If it's not a section, it will call section on the object
@@ -110,16 +118,16 @@ class User < ActiveRecord::Base
     section = object.is_a?(Section) ? object : object.section
     !!(viewable_sections.include?(section) || groups.cms_access.count > 0)
   end
-  
+
   #Expects section to be a Section
-  #Returns true if any of the sections of the groups that have group_type = 'CMS User' 
+  #Returns true if any of the sections of the groups that have group_type = 'CMS User'
   #that the user is in match the section.
-  def able_to_edit?(section)    
+  def able_to_edit?(section)
     !!(editable_sections.include?(section) && able_to?(:edit_content))
   end
-  
+
   def able_to_edit_or_publish_content?
     able_to?(:edit_content, :publish_content)
   end
-  
+
 end

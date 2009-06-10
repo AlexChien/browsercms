@@ -5,13 +5,13 @@
   <% javascript_tag do %>
     jQuery(function($){
       var collectionName = '<%= @block.class.name.underscore.pluralize %>'
-      
+
       $('table.data tbody tr').hover(function(){
         $(this).addClass('hover')
       }, function(){
         $(this).removeClass('hover')
       }).click(function(){
-        var match = this.id.match(/(.*)_(\d+)/) 
+        var match = this.id.match(/(.*)_(\d+)/)
         var id = match[2]
         $('table.data tbody tr').removeClass('selected')
         $(this).addClass('selected')
@@ -53,7 +53,7 @@
       </tr>
     </thead>
     <tbody>
-      <% @block.versions.all(:order => "version desc").each_with_index do |r, i| %>
+      <% @block.versions.find(:all,:order => "version desc").each_with_index do |r, i| %>
         <tr id="<%= @block.class.name.underscore %>_<%= r.version %>">
           <td class="first"></td>
           <td>

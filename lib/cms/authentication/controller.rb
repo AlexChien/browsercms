@@ -12,7 +12,7 @@ module Cms
         # If the user is not logged in, this will be set to the guest user
         def current_user
           @current_user ||= begin
-            User.current = (login_from_session || login_from_cookie || User.guest)  
+            User.current = (login_from_session || login_from_cookie || User.guest)
           end
         end
 
@@ -117,7 +117,7 @@ module Cms
             self.current_user = User.authenticate(login, password)
           end
         end
-    
+
         #
         # Logout
         #
@@ -152,7 +152,7 @@ module Cms
           logout_keeping_session!
           reset_session
         end
-    
+
         #
         # Remember_me Tokens
         #
@@ -164,25 +164,25 @@ module Cms
 
         def valid_remember_cookie?
           return nil unless User.current
-          (User.current.remember_token?) && 
+          (User.current.remember_token?) &&
             (cookies[:auth_token] == User.current.remember_token)
         end
-    
+
         # Refresh the cookie auth token if it exists, create it otherwise
         def handle_remember_cookie! new_cookie_flag
           return unless User.current
           case
           when valid_remember_cookie? then User.current.refresh_token # keeping same expiry date
-          when new_cookie_flag        then User.current.remember_me 
+          when new_cookie_flag        then User.current.remember_me
           else                             User.current.forget_me
           end
           send_remember_cookie!
         end
-  
+
         def kill_remember_cookie!
           cookies.delete :auth_token
         end
-    
+
         def send_remember_cookie!
           cookies[:auth_token] = {
             :value   => User.current.remember_token,
